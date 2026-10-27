@@ -834,3 +834,317 @@ footer img {
         gap: 2.2rem
     }
 }
+
+/* ===== enquiry ===== */
+.cta-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center
+}
+
+.btn.alt {
+    background: transparent;
+    border: 2px solid var(--red);
+    cursor: pointer;
+    font-family: inherit
+}
+
+.btn.alt:hover {
+    background: var(--red)
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: #000000b8;
+    backdrop-filter: blur(6px);
+    display: none;
+    place-items: center;
+    padding: 1rem;
+    color-scheme: dark
+}
+
+.modal.open {
+    display: grid
+}
+
+.sheet {
+    position: relative;
+    width: min(520px, 100%);
+    max-height: 92svh;
+    overflow: auto;
+    background: linear-gradient(160deg, #1c1c1c, #0c0c0c);
+    border: 1px solid #ffffff22;
+    border-top: 3px solid var(--red);
+    padding: 2rem;
+    box-shadow: 0 50px 120px #000;
+    animation: pop .35s cubic-bezier(.2, .8, .2, 1)
+}
+
+@keyframes pop {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(.97)
+    }
+}
+
+.x {
+    position: absolute;
+    top: .6rem;
+    right: .9rem;
+    background: none;
+    border: 0;
+    color: var(--ink);
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer
+}
+
+.sheet form {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.4rem
+}
+
+.sheet label {
+    display: grid;
+    gap: .35rem;
+    font-weight: 600;
+    font-size: .95rem
+}
+
+.sheet input,
+.sheet textarea,
+.sheet select {
+    width: 100%;
+    background: #0a0a0a;
+    color: var(--ink);
+    border: 1px solid #ffffff33;
+    padding: .8rem .9rem;
+    font: inherit;
+    border-radius: 2px
+}
+
+.sheet input:focus,
+.sheet textarea:focus,
+.sheet select:focus {
+    outline: none;
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px #e1060040
+}
+
+.hp {
+    position: absolute !important;
+    left: -9999px;
+    opacity: 0
+}
+
+.sheet .btn {
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600
+}
+
+.sheet .btn:disabled {
+    opacity: .6
+}
+
+.msg {
+    min-height: 1.4em;
+    font-size: .95rem
+}
+
+.msg.ok {
+    color: #5be38b
+}
+
+.msg.err {
+    color: #ff8a80
+}
+
+.msg a {
+    text-decoration: underline;
+    color: #fff
+}
+
+@media(max-width:800px) {
+    .sheet {
+        padding: 1.4rem
+    }
+
+    .cta-row .btn {
+        width: 100%;
+        text-align: center
+    }
+}
+
+/* ===== v4 mobile fit ===== */
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden
+}
+
+@supports(overflow:clip) {
+
+    html,
+    body {
+        overflow-x: clip
+    }
+}
+
+main,
+footer {
+    overflow-x: clip;
+    max-width: 100%
+}
+
+img,
+video,
+canvas,
+svg {
+    max-width: 100%
+}
+
+.marquee {
+    width: 100%
+}
+
+@media(max-width:800px) {
+    .marquee {
+        transform: rotate(-1deg);
+        padding: .6rem 0
+    }
+
+    .marquee span {
+        font-size: clamp(2rem, 10vw, 3rem);
+        padding-right: 2rem
+    }
+
+    .nav .btn {
+        padding: .7rem 1.1rem;
+        font-size: .95rem
+    }
+
+    h1 {
+        font-size: clamp(3rem, 15vw, 5rem)
+    }
+
+    h2 {
+        font-size: clamp(2.2rem, 11vw, 3.6rem)
+    }
+
+    h3 {
+        font-size: 1.8rem
+    }
+
+    .hero {
+        padding: 0 5vw 8vh;
+        gap: 1.1rem
+    }
+
+    .hero-img img {
+        object-position: 62% center
+    }
+
+    .lead {
+        font-size: 1.1rem;
+        max-width: 100%
+    }
+
+    .hero div.fade {
+        display: grid;
+        gap: .8rem
+    }
+
+    .hero .btn,
+    .hero .ghost {
+        display: block;
+        text-align: center;
+        margin: 0
+    }
+
+    .about,
+    .code,
+    .programs,
+    .plans,
+    .faq {
+        padding-top: 12vh;
+        padding-bottom: 12vh
+    }
+
+    .about {
+        gap: 6vh
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr
+    }
+
+    .stats p {
+        font-size: .9rem
+    }
+
+    .stats div:last-child {
+        grid-column: 1/-1
+    }
+
+    .track {
+        padding: 0 5vw;
+        gap: 5vw
+    }
+
+    .intro {
+        flex-basis: 78vw
+    }
+
+    .card {
+        flex-basis: 80vw
+    }
+
+    .manifesto {
+        min-height: 120vh
+    }
+
+    .words {
+        top: 22vh;
+        font-size: clamp(1.9rem, 8.5vw, 3rem)
+    }
+
+    .gstick {
+        padding-top: 12vh
+    }
+
+    .poster {
+        max-width: 360px;
+        margin: auto
+    }
+
+    .join {
+        min-height: auto;
+        padding: 12vh 5vw
+    }
+
+    .join .btn.big {
+        font-size: 1.15rem;
+        padding: 1.1rem 1.6rem
+    }
+
+    .faq summary {
+        font-size: 1.25rem;
+        gap: 1rem
+    }
+
+    footer {
+        padding: 1.5rem 5vw
+    }
+}
+
+@media(max-width:380px) {
+    .stats {
+        grid-template-columns: 1fr
+    }
+}

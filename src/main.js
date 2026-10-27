@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 gsap.registerPlugin(ScrollTrigger)
+ScrollTrigger.config({ ignoreMobileResize: true })
 const $ = (s, r = document) => [...r.querySelectorAll(s)]
 const fine = matchMedia('(hover:hover)').matches
 
@@ -30,7 +31,7 @@ $('.split').forEach(el => {
 // ---------- 3D scene: scroll-driven barbell ----------
 const canvas = $('#gl')[0]
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
+renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 800 ? 1.5 : 2))
 const scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x050505, .055)
 const cam = new THREE.PerspectiveCamera(45, 1, .1, 100); cam.position.set(0, 0, 9)
 scene.add(new THREE.AmbientLight(0xffffff, .35))
@@ -180,3 +181,34 @@ const ps = $('.panel'); ps.forEach(p => {
 gsap.from('.panel', { yPercent: 30, opacity: 0, stagger: .12, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.panels', start: 'top 80%' } })
 gsap.from('.plan', { y: 120, opacity: 0, stagger: .15, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.plan-row', start: 'top 80%' } })
 gsap.from('.faq details', { x: -60, opacity: 0, stagger: .1, duration: .8, scrollTrigger: { trigger: '.faq', start: 'top 75%' } })
+
+// ---------- enquiry form ----------
+const OWNER_WA = '91XXXXXXXXXX' // TODO: owner's WhatsApp number with country code, digits only (used for the fallback link)
+const modal = $('#enq')[0], form = $('#enqForm')[0], msg = $('.msg', form)[0]; let lastBtn
+const openEnq = () => { lastBtn = document.activeElement; modal.classList.add('open'); lenis.stop(); setTimeout(() => form.elements.name.focus(), 60) }
+const closeEnq = () => { modal.classList.remove('open'); lenis.start(); lastBtn && lastBtn.focus() }
+$('[data-enquiry]').forEach(b => b.addEventListener('click', openEnq))
+modal.addEventListener('click', e => { if (e.target === modal || e.target.hasAttribute('data-close')) closeEnq() })
+addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeEnq() })
+const check = d => {
+  if (d.name.trim().length < 2) return 'Please enter your name.'
+  if (!/^\+?[0-9\s-]{10,15}$/.test(d.phone.trim())) return 'Please enter a valid phone number.'
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email.trim())) return 'Please enter a valid email address.'
+  if (d.address.trim().length < 5) return 'Please enter your residence address.'
+  if (!d.topic) return 'Please choose a topic.'
+  return ''
+}
+form.addEventListener('submit', async e => {
+  e.preventDefault(); const d = Object.fromEntries(new FormData(form)), btn = $('button[type=submit]', form)[0]
+  msg.className = 'msg'; const err = check(d); if (err) { msg.textContent = err; msg.classList.add('err'); return }
+  btn.disabled = true; msg.textContent = 'Sending...'
+  try {
+    const r = await fetch((import.meta.env.VITE_API_URL || '') + '/api/enquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
+    if (!r.ok) throw new Error('send failed')
+    msg.textContent = 'Thank you! The club has been notified on WhatsApp and will contact you soon.'; msg.classList.add('ok'); form.reset()
+  } catch {
+    const t = `New enquiry\nName: ${d.name}\nPhone: ${d.phone}\nEmail: ${d.email}\nAddress: ${d.address}\nTopic: ${d.topic}`
+    msg.classList.add('err'); msg.innerHTML = 'We could not send it automatically. <a href="https://wa.me/' + OWNER_WA + '?text=' + encodeURIComponent(t) + '" target="_blank" rel="noopener">Tap here to send it on WhatsApp</a>.'
+  }
+  btn.disabled = false
+})
